@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,12 +17,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.matchmatee.ui.components.ProfileCard
+import com.example.matchmatee.utils.InternetCheck
 import com.example.matchmatee.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen(context: Context) {
+fun HomeScreen(context: Context,
+                       snackbarHostState: SnackbarHostState) {
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(context))
     val profiles by viewModel.profiles.collectAsState()
+    LaunchedEffect(Unit) {
+        if(!InternetCheck.isInternetAvailable(context)) {
+            Log.d("plk", "internet ni h")
+            snackbarHostState.showSnackbar("Please check your Internet connection")
+        }
+    }
 
     if (profiles.isNotEmpty()) {
     LazyColumn(
@@ -34,7 +44,6 @@ fun HomeScreen(context: Context) {
                 ProfileCard(
                     profile = profile,
                     onAccept = {
-                        Log.d("plk", "homescreen pr toh click hua")
                         viewModel.acceptProfile(profile)
                         },
                     onReject = { viewModel.rejectProfile(profile) }

@@ -11,6 +11,7 @@ import com.example.matchmatee.data.local.DatabaseProvider
 import com.example.matchmatee.data.remote.RetrofitInstance
 import com.example.matchmatee.data.repository.UserProfileRepository
 import com.example.matchmatee.domain.UserProfile
+import com.example.matchmatee.utils.InternetCheck
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -30,18 +31,22 @@ class HomeViewModel(context: Context) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            observeProfiles()
+            observeProfiles(context)
         }
     }
 
-    private fun observeProfiles() {
+    private fun observeProfiles(context: Context) {
         viewModelScope.launch {
+            if(!InternetCheck.isInternetAvailable(context)) {
+                Log.e("plk", "No Internet")
+                return@launch
+            }
+            Log.d("plk", "internet h")
             repo.syncProfiles()
         }
     }
 
     fun acceptProfile(profile: UserProfile) {
-        Log.d("plk", "called accept profile for" + profile.name)
         viewModelScope.launch {
             repo.updateProfile(profile.copy(isAccepted = true))
         }

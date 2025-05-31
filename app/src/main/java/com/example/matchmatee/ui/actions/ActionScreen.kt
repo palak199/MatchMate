@@ -25,7 +25,6 @@ fun ActionScreen(context: Context) {
 
     val viewModel = remember { ActionViewModel(context) }
     val acceptedProfiles by viewModel.profiles.collectAsState()
-    Log.d("plk", acceptedProfiles.toString())
     if (acceptedProfiles.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier

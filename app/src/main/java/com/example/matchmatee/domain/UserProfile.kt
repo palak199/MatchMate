@@ -1,7 +1,5 @@
 package com.example.matchmatee.domain
 
-import com.example.matchmatee.data.local.entity.UserProfileEntity
-
 data class UserProfile (
     val uuid: String,
     val name: String,
