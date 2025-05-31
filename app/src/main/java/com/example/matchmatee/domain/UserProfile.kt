@@ -14,34 +14,3 @@ data class UserProfile (
     val isAccepted: Boolean? = null, // null = not yet decided
     val matchScore: Int = 0
 )
-
-fun UserProfileEntity.toDomain(): UserProfile {
-    return UserProfile(
-        id = id,
-        name = name,
-        age = age,
-        city = city,
-        imageUrl = imageUrl,
-        education = education,
-        religion = religion,
-        community = community,
-        isAccepted = isAccepted,
-        matchScore = matchScore
-    )
-}
-
-// UserProfile → UserProfileEntity
-fun UserProfile.toEntity(): UserProfileEntity {
-    return UserProfileEntity(
-        id = id,
-        name = name,
-        age = age,
-        city = city,
-        imageUrl = imageUrl,
-        education = education,
-        religion = religion,
-        community = community,
-        isAccepted = isAccepted,
-        matchScore = matchScore
-    )
-}

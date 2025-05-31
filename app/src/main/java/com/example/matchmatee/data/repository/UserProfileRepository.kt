@@ -3,33 +3,39 @@ package com.example.matchmatee.data.repository
 import android.content.Context
 import android.util.Log
 import com.example.matchmatee.data.local.DatabaseProvider
+import com.example.matchmatee.data.local.dao.UserProfileDao
+import com.example.matchmatee.data.remote.ApiService
 import com.example.matchmatee.domain.UserProfile
 import com.example.matchmatee.domain.toDomain
 import com.example.matchmatee.domain.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class UserProfileRepository(context: Context) {
-    private val userDao = DatabaseProvider.getDatabase(context).userProfileDao()
+/*  here we get data from api and sync our local */
+class UserProfileRepository(context: Context,
+    private val dao: UserProfileDao,
+    private val api: ApiService) {
 
-    fun getAllProfiles(): Flow<List<UserProfile>> {
-        return userDao.getAllProfiles().map {
+    suspend fun syncProfiles() {
+        val resp = api.getUsers(10)
+        val entities = resp.results.mapIndexed{ index, dto -> dto.toEntity(index) }
+        dao.insertProfiles(entities)
+    }
+
+    fun getUndecidedProfiles(): Flow<List<UserProfile>> {
+        return dao.getUndecidedProfiles().map {
             list -> list.map { it.toDomain() }
         }
     }
 
     fun getAcceptedProfiles(): Flow<List<UserProfile>> {
-        return userDao.getAcceptedProfiles().map {
+        return dao.getAcceptedProfiles().map {
                 list -> list.map { it.toDomain() }
         }
     }
 
-    suspend fun insertProfiles(profiles: List<UserProfile>) {
-        userDao.insertProfiles(profiles.map { it.toEntity() })
-    }
-
     suspend fun updateProfile(copy: UserProfile) {
-        userDao.updateProfile(copy.toEntity())
+        dao.updateProfile(copy.toEntity())
         Log.d("plk0", "updated")
     }
 }

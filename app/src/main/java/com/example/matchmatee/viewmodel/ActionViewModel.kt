@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Database
+import com.example.matchmatee.data.local.DatabaseProvider
+import com.example.matchmatee.data.remote.RetrofitInstance
 import com.example.matchmatee.data.repository.UserProfileRepository
 import com.example.matchmatee.domain.UserProfile
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +15,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ActionViewModel(context: Context): ViewModel() {
-    private val repo = UserProfileRepository(context)
+    private val db = DatabaseProvider.getDatabase(context)
+    private val repo = UserProfileRepository(
+        context,
+        dao = db.userProfileDao(),
+        api = RetrofitInstance.api
+    )
     private val _profiles = MutableStateFlow<List<UserProfile>>(emptyList())
     val profiles: StateFlow<List<UserProfile>> = _profiles.asStateFlow()
 
