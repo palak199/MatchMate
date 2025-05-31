@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_profiles")
 data class UserProfileEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey val uuid: String,
     val name: String,
     val age: Int,
     val city: String,

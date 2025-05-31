@@ -3,7 +3,9 @@ package com.example.matchmatee.viewmodel
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.matchmatee.data.local.Database
 import com.example.matchmatee.data.local.DatabaseProvider
 import com.example.matchmatee.data.remote.RetrofitInstance
@@ -27,14 +29,13 @@ class HomeViewModel(context: Context) : ViewModel() {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
-        observeProfiles()
-        //insertDummyProfiles()
+        viewModelScope.launch {
+            observeProfiles()
+        }
     }
 
     private fun observeProfiles() {
         viewModelScope.launch {
-            val response = RetrofitInstance.api.getUsers()
-            Log.d("plk", response.results.toString())
             repo.syncProfiles()
         }
     }
@@ -50,6 +51,15 @@ class HomeViewModel(context: Context) : ViewModel() {
         viewModelScope.launch {
             repo.updateProfile(profile.copy(isAccepted = false))
         }
+    }
+
+    companion object {
+        fun provideFactory(context: Context): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return HomeViewModel(context.applicationContext) as T
+                }
+            }
     }
 
 }

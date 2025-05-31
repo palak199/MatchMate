@@ -15,7 +15,7 @@ import com.example.matchmatee.domain.UserProfile
 fun ProfileScreen() {
     // Static dummy user for now
     val currentUser = UserProfile(
-        id = "me",
+        uuid = "me",
         name = "Your Name",
         age = 27,
         city = "Your City",

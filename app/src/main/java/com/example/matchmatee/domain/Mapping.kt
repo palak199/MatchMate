@@ -5,7 +5,7 @@ import com.example.matchmatee.data.remote.dto.UserDto
 
 fun UserProfileEntity.toDomain(): UserProfile {
     return UserProfile(
-        id = id,
+        uuid = uuid,
         name = name,
         age = age,
         city = city,
@@ -21,7 +21,7 @@ fun UserProfileEntity.toDomain(): UserProfile {
 // UserProfile → UserProfileEntity
 fun UserProfile.toEntity(): UserProfileEntity {
     return UserProfileEntity(
-        id = id,
+        uuid = uuid,
         name = name,
         age = age,
         city = city,
@@ -34,11 +34,11 @@ fun UserProfile.toEntity(): UserProfileEntity {
     )
 }
 
-fun UserDto.toEntity(index: Int): UserProfileEntity {
+fun UserDto.toEntity(uuid: String): UserProfileEntity {
     return UserProfileEntity(
-        id = index.toString(), // or use UUID.randomUUID().toString()
         name = "${name.first} ${name.last}",
         age = dob.age,
+        uuid = login.uuid,
         city = location.city,
         imageUrl = picture.large,
         education = "B.Tech",     // TODO: take random values

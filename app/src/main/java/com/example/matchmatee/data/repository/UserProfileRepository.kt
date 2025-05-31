@@ -17,9 +17,33 @@ class UserProfileRepository(context: Context,
     private val api: ApiService) {
 
     suspend fun syncProfiles() {
-        val resp = api.getUsers(10)
-        val entities = resp.results.mapIndexed{ index, dto -> dto.toEntity(index) }
-        dao.insertProfiles(entities)
+        val response = api.getUsers()
+
+        val existingProfiles = dao.getDecidedProfiles().associateBy { it.uuid }
+
+        val newProfiles = response.results.map { dto ->
+            val uuid = dto.login.uuid
+            val newProfile = dto.toEntity(uuid)
+
+            // merge with old profile if exists
+            val existing = existingProfiles[uuid]
+            if (existing != null) {
+                newProfile.copy(isAccepted = existing.isAccepted)
+            } else {
+                newProfile
+            }
+        }
+
+        // merge with previously accepted/rejected entries not in new API result
+        val leftoverProfiles = existingProfiles.values.filter {
+            it.isAccepted != null && newProfiles.none { np -> np.uuid == it.uuid }
+        }
+
+        val finalProfiles = newProfiles + leftoverProfiles
+
+        dao.insertProfiles(finalProfiles)
+        dao.deleteOldUndecidedProfiles(limit = 50)
+
     }
 
     fun getUndecidedProfiles(): Flow<List<UserProfile>> {
@@ -36,6 +60,5 @@ class UserProfileRepository(context: Context,
 
     suspend fun updateProfile(copy: UserProfile) {
         dao.updateProfile(copy.toEntity())
-        Log.d("plk0", "updated")
     }
 }
