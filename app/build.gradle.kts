@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.matchmatee"
+    namespace = "com.example.matchmate"
     compileSdk = 35
     buildFeatures {
         compose = true
@@ -15,7 +15,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.4"
     }
     defaultConfig {
-        applicationId = "com.example.matchmatee"
+        applicationId = "com.example.matchmate"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

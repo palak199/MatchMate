@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MatchMatee"
+rootProject.name = "MatchMate"
 include(":app")
  
