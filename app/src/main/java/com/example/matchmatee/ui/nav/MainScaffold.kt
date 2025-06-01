@@ -1,12 +1,15 @@
 // File: MainScaffold.kt
 package com.example.matchmatee.ui.nav
 
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,23 +18,42 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.matchmatee.R
 import com.example.matchmatee.ui.actions.ActionScreen
 import com.example.matchmatee.ui.home.HomeScreen
 import com.example.matchmatee.ui.profile.ProfileScreen
+import com.example.matchmatee.utils.TopBar
+import com.example.matchmatee.viewmodel.HomeViewModel
 
 @Composable
 fun MainScaffold() {
     val navController = rememberNavController()
     val items = listOf("home", "matches", "profile")
     val snackbarHostState = remember { SnackbarHostState() }
-
+    val navBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry.value?.destination?.route
     Scaffold(
+        topBar = {
+            TopBar(
+                title = when (currentRoute) {
+                    "home" -> "Matches"
+                    "matches" -> "Accepted"
+                    "profile" -> "My Profile"
+                    else -> "MatchMate"
+                },
+                showRefresh = when (currentRoute) {
+                    "home" -> true
+                    else -> false
+                },
+                onRefresh = viewModel.provideFactory().
+            )
+        },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
             // Bottom bar empty, since we use custom floating group
@@ -39,6 +61,7 @@ fun MainScaffold() {
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             // Main content
+
             NavHost(
                 navController = navController,
                 startDestination = "home",
@@ -49,39 +72,42 @@ fun MainScaffold() {
                 composable("profile") { ProfileScreen() }
             }
 
-            // Floating group of three round icons
-            Row(
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(24.dp)
-                    .shadow(8.dp, RoundedCornerShape(28.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .clip(RoundedCornerShape(28.dp))
-                    .padding(vertical = 8.dp, horizontal = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp)
+                    .padding(bottom = 18.dp)
+                    .clip(RoundedCornerShape(40.dp)) // Fully round pill
+                    .background(Color.White.copy(alpha = 0.4f))
+                    .shadow(elevation = 12.dp, shape = RoundedCornerShape(40.dp))
+                    .padding(horizontal = 32.dp, vertical = 10.dp)
             ) {
-                items.forEach { screen ->
-                    IconButton(
-                        onClick = { navController.navigate(screen) },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(
-                                if (navController.currentDestination?.route == screen)
-                                    MaterialTheme.colorScheme.primaryContainer
-                                else
-                                    MaterialTheme.colorScheme.surface
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    items.forEach { screen ->
+                        IconButton(
+                            onClick = { navController.navigate(screen) },
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    if (currentRoute == screen)
+                                        MaterialTheme.colorScheme.background
+                                    else
+                                        MaterialTheme.colorScheme.surface
+                                )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = getTabIcon(screen)),
+                                contentDescription = screen,
+                                tint = MaterialTheme.colorScheme.primary
                             )
-                    ) {
-                        Icon(
-                            painter = painterResource(id = getTabIcon(screen)),
-                            contentDescription = screen,
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
+                        }
                     }
                 }
-            }
 
+            }
         }
     }
 }

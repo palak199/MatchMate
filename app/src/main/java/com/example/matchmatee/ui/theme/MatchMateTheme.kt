@@ -2,28 +2,62 @@ package com.example.matchmatee.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
+// Dark Theme
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFBB86FC), // Example purple for dark theme
-    secondary = Color(0xFF03DAC6), // Example teal
-    background = Color(0xFF121212), // Dark background
-    surface = Color(0xFF1E1E1E), // Dark surface (for cards, etc.)
-)
-
-private val LightColorScheme = lightColorScheme(
-    secondary = Color(0xFFBA68C8),       // Light Purple
-    primary = Color(0xFFE91E63),     // Pink
-    tertiary = Color(0xFF4DD0E1),      // Light Cyan
+    primary = Color(0xFFFFF3E0),
+    secondary = Color(0xFF03DAC6),
+    surface = Color(0xFF121212),
     background = Color(0xFFFFFFFF),
-    surface = Color(0xFF1E1E1E),       // Slightly lighter gray
-    onPrimary = Color(0xFF000000),
-    onSecondary = Color(0xFF000000),
-    onSurface = Color(0xFFFFFFFF),
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onBackground = Color.White,
+    onSurface = Color.White
 )
 
+// Light Theme with modern colors
+private val LightColorScheme = lightColorScheme(
+    primary = Color(0xFFFCD780),
+    secondary = Color(0xFFBA68C8),
+    tertiary = Color(0xFF4DD0E1),
+    background = Color(0xFFFDFAEA),
+    surface = Color(0xFFFFFFFF),
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    onSurface = Color(0xFF333333),
+    onBackground = Color(0xFF444444)
+)
+
+// Optional: Gradient Brush for backgrounds (you can use it in Box/Column UI)
+val LightGradient = Brush.verticalGradient(
+    colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFFFFF))
+)
+
+// Modern Typography
+private val MatchMateTypography = Typography(
+    titleLarge = TextStyle(
+        fontSize = 22.sp,
+        fontWeight = FontWeight.SemiBold
+    ),
+    bodyMedium = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal
+    ),
+    labelLarge = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium
+    ),
+    headlineSmall = TextStyle(
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold
+    )
+)
 
 @Composable
 fun MatchMateTheme(
@@ -34,7 +68,7 @@ fun MatchMateTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography(),
-        content = content
+        typography = MatchMateTypography,
+        content = content,
     )
 }

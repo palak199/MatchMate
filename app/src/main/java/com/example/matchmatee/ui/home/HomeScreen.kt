@@ -9,10 +9,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.matchmatee.ui.components.ProfileCard
+import com.example.matchmatee.ui.theme.LightGradient
 import com.example.matchmatee.utils.InternetCheck
 import com.example.matchmatee.viewmodel.HomeViewModel
 
@@ -34,7 +34,7 @@ fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(brush = LightGradient)
     ) {
         if (profiles.isEmpty()) {
             // Show message if no profiles
