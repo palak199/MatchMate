@@ -7,7 +7,7 @@ import com.example.matchmatee.data.local.dao.UserProfileDao
 
 @Database(
     entities = [UserProfileEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class Database: RoomDatabase() {

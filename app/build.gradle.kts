@@ -45,6 +45,7 @@ android {
 dependencies {
     implementation(libs.retrofit)
     implementation(libs.gson.converter)
+    implementation(libs.composeneumorphism)
     implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
@@ -54,6 +55,7 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.ui.tooling.preview.android)
     kapt(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

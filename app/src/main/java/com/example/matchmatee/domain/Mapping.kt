@@ -14,6 +14,7 @@ fun UserProfileEntity.toDomain(): UserProfile {
         religion = religion,
         community = community,
         isAccepted = isAccepted,
+        profession = profession,
         matchScore = matchScore
     )
 }
@@ -25,6 +26,7 @@ fun UserProfile.toEntity(): UserProfileEntity {
         name = name,
         age = age,
         city = city,
+        profession = profession,
         imageUrl = imageUrl,
         education = education,
         religion = religion,
@@ -40,6 +42,7 @@ fun UserDto.toEntity(uuid: String): UserProfileEntity {
         age = dob.age,
         uuid = login.uuid,
         city = location.city,
+        profession = "Engineer",
         imageUrl = picture.large,
         education = "B.Tech",     // TODO: take random values
         religion = "Hindu",

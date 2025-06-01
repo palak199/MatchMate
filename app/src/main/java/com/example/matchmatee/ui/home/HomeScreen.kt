@@ -1,63 +1,64 @@
 package com.example.matchmatee.ui.home
 
 import android.content.Context
-import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.matchmatee.ui.components.ProfileCard
 import com.example.matchmatee.utils.InternetCheck
 import com.example.matchmatee.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen(context: Context,
-                       snackbarHostState: SnackbarHostState) {
+fun HomeScreen(
+    context: Context,
+    snackbarHostState: SnackbarHostState
+) {
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(context))
     val profiles by viewModel.profiles.collectAsState()
+
+    // Internet check and show snackbar if no internet
     LaunchedEffect(Unit) {
-        if(!InternetCheck.isInternetAvailable(context)) {
-            Log.d("plk", "internet ni h")
+        if (!InternetCheck.isInternetAvailable(context)) {
             snackbarHostState.showSnackbar("Please check your Internet connection")
         }
     }
 
-    if (profiles.isNotEmpty()) {
-    LazyColumn(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-
-            items(profiles) { profile ->
-                ProfileCard(
-                    profile = profile,
-                    onAccept = {
-                        viewModel.acceptProfile(profile)
-                        },
-                    onReject = { viewModel.rejectProfile(profile) }
-                )
-
+        if (profiles.isEmpty()) {
+            // Show message if no profiles
+            Text(
+                text = "No profiles available.",
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else {
+            // Show profiles list
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 12.dp, bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(profiles) { profile ->
+                    ProfileCard(
+                        profile = profile,
+                        onAccept = { viewModel.acceptProfile(profile) },
+                        onReject = { viewModel.rejectProfile(profile) }
+                    )
+                }
             }
-        }
-        }
-    else {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "No profiles available.")
         }
     }
 }

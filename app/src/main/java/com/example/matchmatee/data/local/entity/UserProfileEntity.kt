@@ -11,6 +11,7 @@ data class UserProfileEntity(
     val city: String,
     val imageUrl: String,
     val education: String,
+    val profession: String,
     val religion: String,
     val community: String,
     val isAccepted: Boolean?, // null = undecided
