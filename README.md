@@ -6,11 +6,12 @@ match cards similar to Shaadi.com's format.
 Built with Kotlin, Jetpack Compose, Room, and Retrofit, users can scroll through profiles, accept or reject matches, and view previously accepted  matches.
 
 ## Demo
-
-Insert gif or link to demo
-
 Screenshots and demo clips: https://drive.google.com/file/d/1X23BA5nY9RlgFN0ZT_YYEz8_k5BF7cAX/view?usp=sharing
-
+<img src="https://github.com/palak199/MatchMate/blob/main/screenshots/Accepted-dark.jpg" height="400"/>
+<img src="https://github.com/palak199/MatchMate/blob/main/screenshots/Accepted-light.jpg" height="400"/>
+<img src="https://github.com/palak199/MatchMate/blob/main/screenshots/Matches-light.jpg" height="400"/>
+<img src="https://github.com/palak199/MatchMate/blob/main/screenshots/My%20Profile-dark.jpg" height="400"/>
+<img src="https://github.com/palak199/MatchMate/blob/main/screenshots/My%20Profile-light.jpg" height="400"/>
 
 ## Features
 - Home Tab to display profiles in cards with details. In background it fetches user data like name, age, city(From API) and then displays them with additional details like education, religion, community and profession (As observed to be the some of the prime factors considered during match making)
