@@ -11,10 +11,10 @@ import androidx.compose.ui.unit.sp
 
 // Dark Theme
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFFFF3E0),
+    primary = Color(0xFFFCD780),
     secondary = Color(0xFF03DAC6),
-    surface = Color(0xFF121212),
-    background = Color(0xFFFFFFFF),
+    background = Color(0xFF343232),
+    surface = Color(0xFFFFFFFF),
     onPrimary = Color.Black,
     onSecondary = Color.Black,
     onBackground = Color.White,
@@ -28,15 +28,18 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Color(0xFF4DD0E1),
     background = Color(0xFFFDFAEA),
     surface = Color(0xFFFFFFFF),
-    onPrimary = Color.White,
+    onPrimary = Color.Gray,
     onSecondary = Color.Black,
     onSurface = Color(0xFF333333),
     onBackground = Color(0xFF444444)
 )
 
-// Optional: Gradient Brush for backgrounds (you can use it in Box/Column UI)
 val LightGradient = Brush.verticalGradient(
     colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFFFFF))
+)
+
+val DarkGradient = Brush.verticalGradient(
+    colors = listOf(Color(0xFF343232), Color(0xFF131212))
 )
 
 // Modern Typography
@@ -65,10 +68,9 @@ fun MatchMateTheme(
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) DarkColorScheme else LightColorScheme
-
     MaterialTheme(
         colorScheme = colors,
         typography = MatchMateTypography,
-        content = content,
+        content = content
     )
 }

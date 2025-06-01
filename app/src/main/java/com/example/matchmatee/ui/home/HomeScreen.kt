@@ -2,6 +2,7 @@ package com.example.matchmatee.ui.home
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.matchmatee.ui.components.ProfileCard
 import com.example.matchmatee.ui.theme.LightGradient
+import com.example.matchmatee.ui.theme.DarkGradient
 import com.example.matchmatee.utils.InternetCheck
 import com.example.matchmatee.viewmodel.HomeViewModel
 
@@ -22,19 +24,20 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     snackbarHostState: SnackbarHostState
 ) {
+    val gradient = if(isSystemInDarkTheme()) DarkGradient else LightGradient
     val profiles by viewModel.profiles.collectAsState()
 
     // Internet check and show snackbar if no internet
     LaunchedEffect(Unit) {
-        if (!InternetCheck.isInternetAvailable(context)) {
-            snackbarHostState.showSnackbar("Please check your Internet connection")
+        viewModel.msg.collect {
+            message -> snackbarHostState.showSnackbar(message)
         }
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(brush = LightGradient)
+            .background(brush = gradient)
     ) {
         if (profiles.isEmpty()) {
             // Show message if no profiles

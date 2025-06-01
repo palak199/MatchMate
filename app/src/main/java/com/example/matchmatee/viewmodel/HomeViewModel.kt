@@ -12,9 +12,11 @@ import com.example.matchmatee.data.remote.RetrofitInstance
 import com.example.matchmatee.data.repository.UserProfileRepository
 import com.example.matchmatee.domain.UserProfile
 import com.example.matchmatee.utils.InternetCheck
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.stateIn
@@ -26,6 +28,8 @@ class HomeViewModel(context: Context) : ViewModel() {
         dao = db.userProfileDao(),
         api = RetrofitInstance.api
     )
+    private val _msg = MutableSharedFlow<String>()
+    val msg = _msg.asSharedFlow()
     val profiles: StateFlow<List<UserProfile>> = repo.getUndecidedProfiles()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -36,19 +40,19 @@ class HomeViewModel(context: Context) : ViewModel() {
     }
 
     private fun observeProfiles(context: Context) {
+        refreshProfiles(context)
+    }
+
+    fun refreshProfiles(context: Context) {
         viewModelScope.launch {
-            if(!InternetCheck.isInternetAvailable(context)) {
+            if (!InternetCheck.isInternetAvailable(context)) {
                 Log.e("plk", "No Internet")
+                _msg.emit("No internet connection")
                 return@launch
             }
             Log.d("plk", "internet h")
-            repo.syncProfiles()
-        }
-    }
-
-    fun refreshProfiles() {
-        viewModelScope.launch {
-            repo.syncProfiles()
+            val result = repo.syncProfiles()
+            if(!result) _msg.emit("Failed to get new profiles")
         }
     }
 
