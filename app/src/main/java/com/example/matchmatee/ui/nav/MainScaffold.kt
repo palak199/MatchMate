@@ -35,6 +35,8 @@ import com.example.matchmatee.viewmodel.HomeViewModel
 fun MainScaffold() {
     val navController = rememberNavController()
     val items = listOf("home", "matches", "profile")
+    val context = LocalContext.current
+    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(context))
     val snackbarHostState = remember { SnackbarHostState() }
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
@@ -51,7 +53,7 @@ fun MainScaffold() {
                     "home" -> true
                     else -> false
                 },
-                onRefresh = viewModel.provideFactory().
+                onRefresh = { viewModel.refreshProfiles() }
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -67,7 +69,7 @@ fun MainScaffold() {
                 startDestination = "home",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("home") { HomeScreen(LocalContext.current, snackbarHostState) }
+                composable("home") { HomeScreen(LocalContext.current, viewModel, snackbarHostState) }
                 composable("matches") { ActionScreen(LocalContext.current) }
                 composable("profile") { ProfileScreen() }
             }

@@ -46,6 +46,12 @@ class HomeViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun refreshProfiles() {
+        viewModelScope.launch {
+            repo.syncProfiles()
+        }
+    }
+
     fun acceptProfile(profile: UserProfile) {
         viewModelScope.launch {
             repo.updateProfile(profile.copy(isAccepted = true))

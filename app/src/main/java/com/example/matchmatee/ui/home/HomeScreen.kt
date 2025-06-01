@@ -19,9 +19,9 @@ import com.example.matchmatee.viewmodel.HomeViewModel
 @Composable
 fun HomeScreen(
     context: Context,
+    viewModel: HomeViewModel,
     snackbarHostState: SnackbarHostState
 ) {
-    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.provideFactory(context))
     val profiles by viewModel.profiles.collectAsState()
 
     // Internet check and show snackbar if no internet
